@@ -1,6 +1,6 @@
-Status: Draft
+Status: Approved
 
-Version: 0.2
+Version: 1.0
 
 Depends On:
 - docs/Planning/15_Implementation_Roadmap.md

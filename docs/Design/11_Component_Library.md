@@ -1,6 +1,6 @@
-Status: Draft
+Status: Approved
 
-Version: 0.2
+Version: 1.0
 
 Depends On:
 - docs/Design/10_Design_System.md
