@@ -187,13 +187,13 @@ Every Server Action must execute the following sequence:
       projectId: string,
       issuedAt: string // ISO-8601 UTC string, e.g. new Date().toISOString()
     ): string {
-      const secret = process.env.CERT_SIGNING_SECRET;
-      if (!secret) throw new Error("CERT_SIGNING_SECRET env var is not set");
+      const secret = process.env.CERTIFICATE_SECRET;
+      if (!secret) throw new Error("CERTIFICATE_SECRET env var is not set");
       const payload = `${studentId}|${projectId}|${issuedAt}`;
       return createHmac("sha256", secret).update(payload).digest("hex");
     }
     ```
-    - **Key**: `process.env.CERT_SIGNING_SECRET` — a minimum 32-byte random hex string stored exclusively in server-side environment variables (`.env.local` locally; Vercel Environment Variables in production). It is **never exposed to the client**.
+    - **Key**: `process.env.CERTIFICATE_SECRET` — a minimum 32-byte random hex string stored exclusively in server-side environment variables (`.env.local` locally; Vercel Environment Variables in production). It is **never exposed to the client**.
     - **Output**: A 64-character lowercase hex string (256-bit HMAC digest).
   - Creates the `Certificate` record mapping: `id` (new UUID), `studentId`, `projectId`, `hashSignature` (the HMAC output), and `issuedAt`.
   - Updates `StudentProfile.status` to `CERTIFIED`.
@@ -382,7 +382,7 @@ interface APIErrorPayload {
 |:---|:---|:---|:---:|
 | **API-REQ-01** | Student Submission | `submitDeliverables` action validates GitHub/Live URLs and checks progress | ✅ Covered |
 | **API-REQ-02** | Mentor Decision | `submitReview` writes feedback and toggles state to `APPROVED` or `REJECTED` | ✅ Covered |
-| **API-REQ-03** | Admin Certificate | `generateCertificate` computes `HMAC-SHA256(studentId\|projectId\|issuedAt, CERT_SIGNING_SECRET)` and stores the 64-char hex digest as `hashSignature`; `verifyCertificateSignature` recomputes server-side using `timingSafeEqual` | ✅ Covered |
+| **API-REQ-03** | Admin Certificate | `generateCertificate` computes `HMAC-SHA256(studentId\|projectId\|issuedAt, CERTIFICATE_SECRET)` and stores the 64-char hex digest as `hashSignature`; `verifyCertificateSignature` recomputes server-side using `timingSafeEqual` | ✅ Covered |
 | **API-REQ-04** | Security RBAC | Standard middleware verifies session parameters and roles on execution | ✅ Covered |
 | **API-REQ-05** | Public Lookups | `GET /api/verify/[certId]` route exposes authentic metadata to public requests | ✅ Covered |
 
@@ -391,6 +391,6 @@ interface APIErrorPayload {
 ## 7. Architecture Review Checklist
 - [x] Direct routing payloads mapped to validation checkers (Zod schemas defined)
 - [x] Safe verification routes handle invalid/non-existent certificates (server-side HMAC recomputation + `timingSafeEqual` guard)
-- [x] Certificate signing uses HMAC-SHA256 with canonical payload `studentId|projectId|issuedAt` and server-only `CERT_SIGNING_SECRET` env var
+- [x] Certificate signing uses HMAC-SHA256 with canonical payload `studentId|projectId|issuedAt` and server-only `CERTIFICATE_SECRET` env var
 - [x] Responses enforce consistent JSON layout formatting (success and error types defined)
 - [x] No structural drift from Project Constitution (restricted to standard student, mentor, admin roles and actions)
