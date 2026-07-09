@@ -53,5 +53,5 @@ This document maintains the active development stage, approvals, and upcoming ta
 ---
 
 ## 3. Next Recommended Task
-*   **Goal**: Begin Milestone 3 of the implementation roadmap (Sprint 3: Dashboard Modules & Actions).
-*   **Action**: Build the Student portal layout `/dashboard/student` showing tasks checklist, `toggleTaskCompletion` server actions, deliverable submit inputs (`/dashboard/student/submit`), and Mentor review queue dashboard layouts (`/dashboard/mentor`).
+*   **Goal**: Begin Milestone 4 of the implementation roadmap (Sprint 4: Certificate Generation & Public Verification).
+*   **Action**: Implement the cryptographically secure certificate hashing signature logic (`CertificateInputSchema` Zod validation, HMAC-SHA256 generation), PDF design layout generation, and the public verification query landing page (`/verify/[hashSignature]`).
