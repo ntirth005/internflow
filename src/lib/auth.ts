@@ -1,7 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { env } from "@/lib/config";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development_purposes_only";
+const JWT_SECRET = env.JWT_SECRET;
 const key = new TextEncoder().encode(JWT_SECRET);
 
 export interface JWTPayload {

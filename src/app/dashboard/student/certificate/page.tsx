@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/auth";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { env } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export default async function StudentCertificatePage() {
   }
 
   const cert = profile.certificate;
-  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/verify/${cert.hashSignature}`;
+  const verificationUrl = `${env.NEXT_PUBLIC_APP_URL}/verify/${cert.hashSignature}`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 text-left">

@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { env } from "@/lib/config";
 
 /**
  * Computes deterministic HMAC-SHA256 hash digest for a student's graduation certificate.
@@ -10,7 +11,7 @@ export function generateCertificateHash(
   issuedAt: Date
 ): string {
   const payload = `${studentId}|${projectId}|${issuedAt.toISOString()}`;
-  const secret = process.env.CERTIFICATE_SECRET || "skillbridge_certificate_hmac_sha256_private_secret_key";
+  const secret = env.CERTIFICATE_SECRET;
   return crypto.createHmac("sha256", secret).update(payload).digest("hex");
 }
 
