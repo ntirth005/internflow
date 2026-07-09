@@ -14,8 +14,8 @@ The SkillBridge IMP is a secure, full-stack application built to host and manage
 *   **Hosting**: Vercel
 
 ### Current Project Status
-*   **Active Phase**: Phase 2: UX Architecture (🚧 Active)
-*   **Last Completed Phase**: Phase 1: Product Architecture (✅ Approved)
+*   **Active Phase**: Phase 8: API Design (🚧 Active)
+*   **Last Completed Phase**: Phase 7: Database Design (✅ Approved)
 *   **Live Phase Log**: Refer to [CURRENT_PHASE.md](file:///home/ntirth005/Documents/IMP/docs/CURRENT_PHASE.md) for up-to-date documentation gating status.
 
 ---
@@ -43,7 +43,7 @@ docs/
 ├── CHANGELOG.md                             # Governance changes log
 ├── README.md                                # This document
 │
-├── Architecture/                            # Active drafting phase (03 drafted)
+├── Architecture/                            # Active drafting phase (03-08 approved)
 │   ├── 03_Product_Architecture.md
 │   ├── 04_UX_Architecture.md
 │   ├── 05_Information_Architecture.md
