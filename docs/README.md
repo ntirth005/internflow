@@ -96,3 +96,69 @@ All contributions must adhere to the **Conventional Commits Specification** defi
 *   `refactor(<scope>): <description>` (logic refactoring)
 
 See `docs/01_Project_Constitution.md#6-git-commit-policy-conventional-commits` for detailed guidelines.
+
+---
+
+## 6. Component System Designs
+
+Below are the high-level architectural flows and system designs for each of the platform's core components.
+
+### 6.1 Authentication System
+```mermaid
+flowchart TD
+    Client[Client UI: Login/Register] -->|Submits Credentials| AuthAction[Server Action: Auth Controller]
+    AuthAction -->|Query User & Hash Check| DB[(PostgreSQL)]
+    DB -->|User Record| AuthAction
+    AuthAction -->|Generate JWT / Session| Middleware[Next.js Middleware Check]
+    Middleware -->|Authorized Role Route| Dashboard[Target Dashboard Layout]
+```
+
+### 6.2 Student Dashboard
+```mermaid
+flowchart TD
+    Student[Student UI] -->|View Project| FetchProj[Server Action: Get Assigned Project]
+    FetchProj -->|Read Details| DB[(PostgreSQL)]
+    Student -->|Mark Step Completed| UpdateCheck[Server Action: Toggle Checklist]
+    UpdateCheck -->|Update Progress State| DB
+    Student -->|Submit Deliverables| SubmitForm[Server Action: Submit Links]
+    SubmitForm -->|Validate & Save URLs| DB
+```
+
+### 6.3 Mentor Dashboard
+```mermaid
+flowchart TD
+    Mentor[Mentor UI] -->|Load Active Queue| FetchQueue[Server Action: Get Submissions]
+    FetchQueue -->|Query Submissions| DB[(PostgreSQL)]
+    Mentor -->|Review Code & Links| AuditAction[Audit Interface]
+    Mentor -->|Input Review Feedback| FeedbackAction[Server Action: Add Feedback]
+    FeedbackAction -->|Submit Decision: Approve/Reject| DB
+```
+
+### 6.4 Admin Dashboard
+```mermaid
+flowchart TD
+    Admin[Admin UI] -->|Create / Assign Projects| ProjAction[Server Action: Project Controller]
+    ProjAction -->|Write Project Records| DB[(PostgreSQL)]
+    Admin -->|Edit Student Status| StudAction[Server Action: Manage Users]
+    StudAction -->|Update User Profiles| DB
+```
+
+### 6.5 Analytics Module
+```mermaid
+flowchart TD
+    DB[(PostgreSQL)] -->|Aggregate Counts| AnalyticsEngine[Server Action: Aggregate Data]
+    AnalyticsEngine -->|Compute Metrics| AnalyticsWidget[Admin Dashboard UI]
+    AnalyticsWidget -->|Total / Active Students| AdminView[Visual Grid Display]
+    AnalyticsWidget -->|Completion % & Pending Reviews| AdminView
+```
+
+### 6.6 Certificate Generation
+```mermaid
+flowchart TD
+    AdminCert[Admin Certificate UI] -->|Issue Certificate| CertAction[Server Action: Generate Cryptographic Certificate]
+    CertAction -->|Generate Secure Hash Signature| CertAction
+    CertAction -->|Save Certificate Record| DB[(PostgreSQL)]
+    Student[Student UI] -->|Request PDF Export| ClientExport[Client PDF Renderer]
+    PublicUser[Public Lookup Route] -->|Query Signature Hash| VerifyAction[Server Action: Verify Signature]
+    VerifyAction -->|Check Authenticity Status| DB
+```
