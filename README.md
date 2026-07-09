@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillBridge Internship Management Portal (IMP)
 
-## Getting Started
+Welcome to the **SkillBridge Internship Management Portal (IMP)**. This platform coordinates project distribution, student progress tracking, submission reviews, and cryptographic certificate generation.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Technical Stack
+
+- **Frontend**: Next.js (App Router), React, TypeScript, Tailwind CSS
+- **Database**: PostgreSQL
+- **ORM**: Prisma ORM
+- **Hosting**: Vercel
+
+---
+
+## 📂 Project Directory Structure
+
+```
+.
+├── docs/                      # Gated project documentation hierarchy
+│   ├── 00_Project_Requirements.pdf
+│   ├── 01_Project_Constitution.md
+│   ├── CURRENT_PHASE.md       # Live project phase and document status tracker
+│   └── ...
+├── prisma/                    # Relational database models and schemas
+│   └── schema.prisma
+├── src/
+│   ├── app/                   # App Router views, landing pages, and endpoints
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── ...
+│   ├── components/            # Reusable UI widgets
+│   ├── lib/                   # Shared client helpers (e.g., Prisma singleton)
+│   └── ...
+├── .env                       # Environment profiles (Database strings, JWT secrets)
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ How to Run Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Prerequisites
+Ensure you have **Node.js** and **PostgreSQL** installed locally.
 
-## Learn More
+### 2. Set Up Environment Variables
+Create a `.env` file in the project root folder (or copy from the provided template):
+```bash
+# PostgreSQL Connection Strings
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/skillbridge_imp?schema=public&connection_limit=10&pgbouncer=true"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/skillbridge_imp?schema=public"
 
-To learn more about Next.js, take a look at the following resources:
+# Cryptographic Signer Secrets
+JWT_SECRET="your_jwt_secret_token_signature_key"
+CERTIFICATE_SECRET="your_certificate_hmac_sha256_private_secret_key"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Install Dependencies
+Run the installation with the `--ignore-scripts` flag as required by repository safety guidelines:
+```bash
+npm install --ignore-scripts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Generate Prisma Client
+Build the database interface bindings:
+```bash
+npx prisma generate
+```
 
-## Deploy on Vercel
+### 5. Start Development Server
+Launch the compiler and hot-reloader:
+```bash
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser to view the portal.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📈 Development Workflow & Governance
+
+This project implements a strict **documentation-first workflow**. All 21 documentation files (covering architecture, design systems, and testing rules) must be approved before shipping code features.
+
+- **Gating Log**: Refer to [CURRENT_PHASE.md](file:///home/ntirth005/Documents/IMP/docs/CURRENT_PHASE.md) for live phase tracking.
+- **Commit Format**: All commit messages must follow the Conventional Commits Specification:
+  - `feat(scope): <description>` (new features)
+  - `fix(scope): <description>` (bug fixes)
+  - `docs(scope): <description>` (documentation updates)
+  - `refactor(scope): <description>` (refactoring checks)
+
+For a deep-dive into the specifications, browse the files in the [docs](file:///home/ntirth005/Documents/IMP/docs/) folder.
