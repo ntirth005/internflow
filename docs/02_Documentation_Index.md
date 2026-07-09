@@ -1,6 +1,6 @@
-Status: Draft
+Status: Approved
 
-Version: 0.1
+Version: 1.0
 
 Depends On:
 - docs/01_Project_Constitution.md
@@ -131,8 +131,8 @@ graph TD
 |:---:|:---|:---:|:---:|
 | **00** | `docs/00_Project_Requirements.pdf` | 1.0 | ✅ Approved |
 | **01** | `docs/01_Project_Constitution.md` | 1.1 | ✅ Approved |
-| **02** | `docs/02_Documentation_Index.md` | 0.1 | 📝 Draft |
-| **03** | `docs/Architecture/03_Product_Architecture.md` | - | ⏳ Pending |
+| **02** | `docs/02_Documentation_Index.md` | 1.0 | ✅ Approved |
+| **03** | `docs/Architecture/03_Product_Architecture.md` | 0.1 | 📝 Draft |
 | **04** | `docs/Architecture/04_UX_Architecture.md` | - | ⏳ Pending |
 | **05** | `docs/Architecture/05_Information_Architecture.md` | - | ⏳ Pending |
 | **06** | `docs/Architecture/06_Frontend_Architecture.md` | - | ⏳ Pending |
@@ -155,9 +155,9 @@ graph TD
 ---
 
 ## 5. Current Project Stage
-*   **Stage**: `Repository Establishment`
-*   **Goal**: Approval of the documentation index before creating architecture files.
-*   **Next Gate**: Transition to `Architecture Stage` on approval of this document (`02_Documentation_Index.md`).
+*   Stage: `Architecture Stage`
+*   Goal: Draft and approve all architectural specifications (03 to 09).
+*   Next Gate: Transition to `Design Stage` on approval of `09_API_Architecture.md`.
 
 ---
 

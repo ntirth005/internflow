@@ -9,7 +9,7 @@ This document maintains the active development stage, approvals, and upcoming ta
 | Phase | Milestone / Stage | Status | Version |
 |:---:|:---|:---:|:---:|
 | **Phase 0** | Repository Setup & Governance | ✅ Approved | 1.1 |
-| **Phase 1** | Product Architecture | ⬜ Pending | - |
+| **Phase 1** | Product Architecture | 🚧 Active | 0.1 |
 | **Phase 2** | UX Architecture | ⬜ Pending | - |
 | **Phase 3** | Information Architecture | ⬜ Pending | - |
 | **Phase 4** | Design System Specs | ⬜ Pending | - |
@@ -28,11 +28,12 @@ This document maintains the active development stage, approvals, and upcoming ta
 
 *   **docs/00_Project_Requirements.pdf**: `Approved` (Version 1.0)
 *   **docs/01_Project_Constitution.md**: `Approved` (Version 1.1)
-*   **docs/02_Documentation_Index.md**: `Draft` (Version 0.1)
+*   **docs/02_Documentation_Index.md**: `Approved` (Version 1.0)
 *   **docs/START_HERE.md**: `Approved` (Version 1.0)
+*   **docs/Architecture/03_Product_Architecture.md**: `Draft` (Version 0.1)
 
 ---
 
 ## 3. Next Recommended Task
-*   **Goal**: Approval of the Documentation Index (`docs/02_Documentation_Index.md`) to finalize the repository foundation phase and unlock Phase 1: Product Architecture.
-*   **Action**: Wait for user review command (`Approved`, `Continue`, etc.).
+*   **Goal**: Complete drafting of Product Architecture (`docs/Architecture/03_Product_Architecture.md`) detailing user flows, state transitions, and role structures.
+*   **Action**: Draft `docs/Architecture/03_Product_Architecture.md` and present for review.

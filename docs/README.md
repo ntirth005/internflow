@@ -13,6 +13,11 @@ The SkillBridge IMP is a secure, full-stack application built to host and manage
 *   **ORM**: Prisma ORM
 *   **Hosting**: Vercel
 
+### Current Project Status
+*   **Active Phase**: Phase 1: Product Architecture (🚧 Active)
+*   **Last Completed Phase**: Phase 0: Repository Setup & Governance (✅ Approved)
+*   **Live Phase Log**: Refer to [CURRENT_PHASE.md](file:///home/ntirth005/Documents/IMP/docs/CURRENT_PHASE.md) for up-to-date documentation gating status.
+
 ---
 
 ## 2. Documentation-First Methodology
@@ -38,7 +43,7 @@ docs/
 ├── CHANGELOG.md                             # Governance changes log
 ├── README.md                                # This document
 │
-├── Architecture/                            # Under review/pending draft
+├── Architecture/                            # Active drafting phase (03 drafted)
 │   ├── 03_Product_Architecture.md
 │   ├── 04_UX_Architecture.md
 │   ├── 05_Information_Architecture.md
