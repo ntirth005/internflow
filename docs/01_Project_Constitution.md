@@ -3,16 +3,13 @@ Status: Approved
 Version: 1.1
 
 Depends On:
-- docs/SkillBridge Internship Program.pdf
+- docs/00_Project_Requirements.pdf
 
 Blocks:
 - docs/02_Documentation_Index.md
 
 Author:
-Gemini (Architecture Mode)
-
-Last Updated:
-2026-07-09
+Lead Architect
 
 ---
 
@@ -91,7 +88,7 @@ No document in the hierarchy may be generated until all of its declared dependen
 
 ## 4. Documentation Workflow & Approval Protocol
 The development lifecycle progresses document-by-document.
-1.  **Drafting**: The AI assistant drafts a single document from the hierarchy, starting with metadata (Status: Draft, Version 0.1, Dependencies, Blocks, Author, Date).
+1.  **Drafting**: The AI assistant drafts a single document from the hierarchy, starting with metadata (Status: Draft, Version 0.1, Dependencies, Blocks, Owner).
 2.  **Architecture Review**: The AI reviews the drafted document against this Constitution and the SkillBridge Requirements PDF.
 3.  **Approval Request**: The AI stops execution and presents the document for review.
 4.  **Action**: The user provides approval via command (`Approved`, `Continue`, `Next Document`, `Proceed`, `Generate Next`) or requests revisions.
@@ -157,7 +154,7 @@ AI assistants are strictly prohibited from:
 
 ### 7.3 AI Self-Validation Checklist
 Before concluding any step or presenting a file for approval, the AI must validate the work against the following checklist:
-- [x] **Requirements Compliance**: Fully consistent with `docs/SkillBridge Internship Program.pdf`.
+- [x] **Requirements Compliance**: Fully consistent with `docs/00_Project_Requirements.pdf`.
 - [x] **Constitution Alignment**: Adheres to the rules and structures in `docs/01_Project_Constitution.md`.
 - [x] **Architecture Continuity**: Preserves approved directory structures, routing schemes, and schemas.
 - [x] **Technology Guardrails**: Confined to Next.js, Prisma, PostgreSQL, React, and Tailwind.

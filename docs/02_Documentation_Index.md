@@ -9,10 +9,7 @@ Blocks:
 - docs/Architecture/03_Product_Architecture.md
 
 Author:
-Gemini (Architecture Mode)
-
-Last Updated:
-2026-07-09
+Lead Architect
 
 ---
 
@@ -61,7 +58,7 @@ docs/
 
 | ID | Document Name | Purpose / Description |
 |:---|:---|:---|
-| **00** | [Project Requirements](file:///home/ntirth005/Documents/IMP/docs/SkillBridge%20Internship%20Program.pdf) | The immutable requirements specification provided by Team SkillBridge. |
+| **00** | [Project Requirements](file:///home/ntirth005/Documents/IMP/docs/00_Project_Requirements.pdf) | The immutable requirements specification provided by Team SkillBridge. |
 | **01** | [Project Constitution](file:///home/ntirth005/Documents/IMP/docs/01_Project_Constitution.md) | The governing document for repository rules, tech stack, and workflow rules. |
 | **02** | [Documentation Index](file:///home/ntirth005/Documents/IMP/docs/02_Documentation_Index.md) | Master tree index, dependency graph, status tracker, and stage checklists. |
 | **03** | Product Architecture | Product flow diagrams, role definitions, and core user-journey states. |
@@ -130,30 +127,30 @@ graph TD
 
 ## 4. Documentation Status Tracker
 
-| ID | File Path | Version | Status | Approved Date |
-|:---:|:---|:---:|:---:|:---:|
-| **00** | `docs/SkillBridge Internship Program.pdf` | 1.0 | ✅ Approved | 2026-07-09 |
-| **01** | `docs/01_Project_Constitution.md` | 1.1 | ✅ Approved | 2026-07-09 |
-| **02** | `docs/02_Documentation_Index.md` | 0.1 | 📝 Draft | *Pending* |
-| **03** | `docs/Architecture/03_Product_Architecture.md` | - | ⏳ Pending | - |
-| **04** | `docs/Architecture/04_UX_Architecture.md` | - | ⏳ Pending | - |
-| **05** | `docs/Architecture/05_Information_Architecture.md` | - | ⏳ Pending | - |
-| **06** | `docs/Architecture/06_Frontend_Architecture.md` | - | ⏳ Pending | - |
-| **07** | `docs/Architecture/07_Backend_Architecture.md` | - | ⏳ Pending | - |
-| **08** | `docs/Architecture/08_Database_Architecture.md` | - | ⏳ Pending | - |
-| **09** | `docs/Architecture/09_API_Architecture.md` | - | ⏳ Pending | - |
-| **10** | `docs/Design/10_Design_System.md` | - | ⏳ Pending | - |
-| **11** | `docs/Design/11_Component_Library.md` | - | ⏳ Pending | - |
-| **12** | `docs/Design/12_Interaction_Guidelines.md` | - | ⏳ Pending | - |
-| **13** | `docs/Design/13_Accessibility_Guidelines.md` | - | ⏳ Pending | - |
-| **14** | `docs/Planning/14_Project_Phases.md` | - | ⏳ Pending | - |
-| **15** | `docs/Planning/15_Implementation_Roadmap.md` | - | ⏳ Pending | - |
-| **16** | `docs/Planning/16_Testing_Strategy.md` | - | ⏳ Pending | - |
-| **17** | `docs/Planning/17_Deployment_Strategy.md` | - | ⏳ Pending | - |
-| **18** | `docs/Development/18_Coding_Standards.md` | - | ⏳ Pending | - |
-| **19** | `docs/Development/19_Git_Workflow.md` | - | ⏳ Pending | - |
-| **20** | `docs/Development/20_Project_Structure.md` | - | ⏳ Pending | - |
-| **21** | `docs/Development/21_Definition_of_Done.md` | - | ⏳ Pending | - |
+| ID | File Path | Version | Status |
+|:---:|:---|:---:|:---:|
+| **00** | `docs/00_Project_Requirements.pdf` | 1.0 | ✅ Approved |
+| **01** | `docs/01_Project_Constitution.md` | 1.1 | ✅ Approved |
+| **02** | `docs/02_Documentation_Index.md` | 0.1 | 📝 Draft |
+| **03** | `docs/Architecture/03_Product_Architecture.md` | - | ⏳ Pending |
+| **04** | `docs/Architecture/04_UX_Architecture.md` | - | ⏳ Pending |
+| **05** | `docs/Architecture/05_Information_Architecture.md` | - | ⏳ Pending |
+| **06** | `docs/Architecture/06_Frontend_Architecture.md` | - | ⏳ Pending |
+| **07** | `docs/Architecture/07_Backend_Architecture.md` | - | ⏳ Pending |
+| **08** | `docs/Architecture/08_Database_Architecture.md` | - | ⏳ Pending |
+| **09** | `docs/Architecture/09_API_Architecture.md` | - | ⏳ Pending |
+| **10** | `docs/Design/10_Design_System.md` | - | ⏳ Pending |
+| **11** | `docs/Design/11_Component_Library.md` | - | ⏳ Pending |
+| **12** | `docs/Design/12_Interaction_Guidelines.md` | - | ⏳ Pending |
+| **13** | `docs/Design/13_Accessibility_Guidelines.md` | - | ⏳ Pending |
+| **14** | `docs/Planning/14_Project_Phases.md` | - | ⏳ Pending |
+| **15** | `docs/Planning/15_Implementation_Roadmap.md` | - | ⏳ Pending |
+| **16** | `docs/Planning/16_Testing_Strategy.md` | - | ⏳ Pending |
+| **17** | `docs/Planning/17_Deployment_Strategy.md` | - | ⏳ Pending |
+| **18** | `docs/Development/18_Coding_Standards.md` | - | ⏳ Pending |
+| **19** | `docs/Development/19_Git_Workflow.md` | - | ⏳ Pending |
+| **20** | `docs/Development/20_Project_Structure.md` | - | ⏳ Pending |
+| **21** | `docs/Development/21_Definition_of_Done.md` | - | ⏳ Pending |
 
 ---
 
