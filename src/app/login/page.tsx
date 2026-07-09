@@ -30,22 +30,35 @@ export default function LoginPage() {
     if (!password) newErrors.password = "Password is required";
 
     if (Object.keys(newErrors).length > 0) {
+      console.log("[Client Login] Client-side validation failed:", newErrors);
       setErrors(newErrors);
       setIsLoading(false);
       return;
     }
 
-    const result = await loginAction({ email, password });
+    console.log("[Client Login] Initiating login request to server for email:", email);
+    try {
+      const result = await loginAction({ email, password });
+      console.log("[Client Login] Received result from server loginAction:", result);
 
-    if (result.success && result.redirectUrl) {
-      router.push(result.redirectUrl);
-      router.refresh();
-    } else if (!result.success) {
-      if (result.error.code === "BAD_REQUEST" && result.error.details) {
-        setErrors(result.error.details);
-      } else {
-        setErrorMessage(result.error.message);
+      if (result.success && result.redirectUrl) {
+        console.log("[Client Login] Redirecting to dashboard route:", result.redirectUrl);
+        router.push(result.redirectUrl);
+        console.log("[Client Login] router.push called, triggering router.refresh...");
+        router.refresh();
+        console.log("[Client Login] router.refresh complete.");
+      } else if (!result.success) {
+        console.log("[Client Login] Server login failed:", result.error);
+        if (result.error.code === "BAD_REQUEST" && result.error.details) {
+          setErrors(result.error.details);
+        } else {
+          setErrorMessage(result.error.message);
+        }
+        setIsLoading(false);
       }
+    } catch (err) {
+      console.error("[Client Login] Unhandled promise rejection during login submission:", err);
+      setErrorMessage("An unexpected client-side error occurred.");
       setIsLoading(false);
     }
   };

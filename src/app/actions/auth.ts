@@ -101,9 +101,11 @@ export async function registerAction(formData: unknown): Promise<ActionResult> {
 }
 
 export async function loginAction(formData: unknown): Promise<ActionResult> {
+  console.log("[Server Login] Action invoked. Input type:", typeof formData);
   try {
     const parsed = LoginInputSchema.safeParse(formData);
     if (!parsed.success) {
+      console.log("[Server Login] Validation failed:", parsed.error.flatten().fieldErrors);
       return {
         success: false,
         error: {
@@ -115,10 +117,13 @@ export async function loginAction(formData: unknown): Promise<ActionResult> {
     }
 
     const { email, password } = parsed.data;
+    console.log("[Server Login] Input validation passed for email:", email);
 
     // Fetch user
+    console.log("[Server Login] Fetching user from database...");
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
+      console.log("[Server Login] No user found with email:", email);
       return {
         success: false,
         error: {
@@ -127,10 +132,13 @@ export async function loginAction(formData: unknown): Promise<ActionResult> {
         },
       };
     }
+    console.log("[Server Login] User found in database. Role:", user.role);
 
     // Compare password hash
+    console.log("[Server Login] Comparing password hash...");
     const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) {
+      console.log("[Server Login] Password mismatch for user:", email);
       return {
         success: false,
         error: {
@@ -139,14 +147,18 @@ export async function loginAction(formData: unknown): Promise<ActionResult> {
         },
       };
     }
+    console.log("[Server Login] Password matches successfully.");
 
     // Sign JWT and set cookie
+    console.log("[Server Login] Signing session JWT...");
     const token = await signJWT({
       userId: user.id,
       email: user.email,
       role: user.role,
     });
+    console.log("[Server Login] Session JWT signed successfully.");
 
+    console.log("[Server Login] Setting sb_session cookie...");
     const cookieStore = await cookies();
     cookieStore.set("sb_session", token, {
       httpOnly: true,
@@ -155,15 +167,17 @@ export async function loginAction(formData: unknown): Promise<ActionResult> {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
+    console.log("[Server Login] Cookie sb_session set complete.");
 
     // Return redirect destination
     const redirectUrl = `/dashboard/${user.role.toLowerCase()}`;
+    console.log("[Server Login] Login successful. Returning redirectUrl:", redirectUrl);
     return {
       success: true,
       redirectUrl,
     };
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("[Server Login] Error occurred during login process:", error);
     return {
       success: false,
       error: {
