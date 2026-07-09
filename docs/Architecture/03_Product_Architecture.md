@@ -89,7 +89,7 @@ flowchart TD
 ### 2.4 Certificate Issuance & Verification
 Once marked as `APPROVED` by their mentor, the student appears in the Admin dashboard. The administrator clicks "Generate Certificate". The platform generates a unique certificate record containing:
 1. A unique UUID (Certificate ID).
-2. A cryptographically verifiable signature hash derived using SHA-256 over the student's name, project details, issue date, and a private environment secret.
+2. A cryptographically verifiable signature hash derived using HMAC-SHA256 over the stable identifier payload (`studentId|projectId|issuedAt`) and a private environment secret.
 
 Students can download their certificate as a PDF directly from their dashboard. Public users (e.g. recruiters) can query `/verify?id=[id]` to inspect and verify the authenticity of the certificate.
 
