@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, AlertCircle, FileText, CheckCircle } from "lucide-react";
+import { ArrowRight, BookOpen, AlertCircle, FileText, CheckCircle, Award } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/auth";
 import { ChecklistGrid } from "@/components/student/ChecklistGrid";
@@ -135,11 +135,20 @@ export default async function StudentDashboardPage() {
           </p>
         </div>
 
-        {profile.status !== "UNASSIGNED" && (
+        {profile.status === "CERTIFIED" && (
+          <Link href="/dashboard/student/certificate" passHref>
+            <Button className="flex items-center gap-2 cursor-pointer bg-warning hover:bg-warning/80 text-warning-foreground font-semibold">
+              View Certificate
+              <Award className="w-4 h-4" />
+            </Button>
+          </Link>
+        )}
+
+        {profile.status !== "UNASSIGNED" && profile.status !== "CERTIFIED" && (
           <Link href="/dashboard/student/submit" passHref>
             <Button
               className="flex items-center gap-2 cursor-pointer"
-              disabled={profile.progress < 100 || profile.status === "SUBMITTED" || profile.status === "APPROVED" || profile.status === "CERTIFIED"}
+              disabled={profile.progress < 100 || profile.status === "SUBMITTED" || profile.status === "APPROVED"}
             >
               Submit Project Deliverables
               <ArrowRight className="w-4 h-4" />
