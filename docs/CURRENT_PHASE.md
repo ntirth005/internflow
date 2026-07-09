@@ -53,5 +53,5 @@ This document maintains the active development stage, approvals, and upcoming ta
 ---
 
 ## 3. Next Recommended Task
-*   **Goal**: Begin Milestone 4 of the implementation roadmap (Sprint 4: Certificate Generation & Public Verification).
-*   **Action**: Implement the cryptographically secure certificate hashing signature logic (`CertificateInputSchema` Zod validation, HMAC-SHA256 generation), PDF design layout generation, and the public verification query landing page (`/verify/[hashSignature]`).
+*   **Goal**: Begin Milestone 5 of the implementation roadmap (Sprint 5: Verification & Production Release Bundle).
+*   **Action**: Validate the certificate timing-safe signature comparison logic with unit tests, ensure all middleware session boundary redirects are secure, and verify build compiles cleanly.
