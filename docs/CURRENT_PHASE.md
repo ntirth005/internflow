@@ -53,5 +53,5 @@ This document maintains the active development stage, approvals, and upcoming ta
 ---
 
 ## 3. Next Recommended Task
-*   **Goal**: Begin Milestone 1 of the implementation roadmap (Sprint 1: Setup & Core Scaffold). Initialize Next.js project and write database schema.
-*   **Action**: Create Next.js project file scaffolding and configure `prisma/schema.prisma` and `.env` profiles.
+*   **Goal**: Begin Milestone 3 of the implementation roadmap (Sprint 3: Dashboard Modules & Actions).
+*   **Action**: Build the Student portal layout `/dashboard/student` showing tasks checklist, `toggleTaskCompletion` server actions, deliverable submit inputs (`/dashboard/student/submit`), and Mentor review queue dashboard layouts (`/dashboard/mentor`).
