@@ -171,16 +171,59 @@ Every Server Action must execute the following sequence:
 - **Zod Schema**: `CertificateInputSchema`
 - **Behavior**:
   - Verifies `StudentProfile.status` is `APPROVED`.
-  - Retrieves student's name and the assigned project template title.
-  - Generates a Certificate UUID.
-  - Computes HMAC-SHA256 signature hash:
-    $$\text{hashSignature} = \text{HMAC-SHA256}(\text{data}, \text{secret})$$
-    where:
-    $$\text{data} = \text{studentName} + "|" + \text{projectTitle} + "|" + \text{issuedAtISOString}$$
-    $$\text{secret} = \text{process.env.CERTIFICATE_SECRET}$$
-  - Creates the `Certificate` record mapping the UUID, student, project, and `hashSignature`.
+  - Retrieves student's `id`, `name`, and the assigned project's `id` and `title`.
+  - Captures `issuedAt` as the current UTC timestamp in ISO-8601 format (e.g. `2026-07-09T09:30:00.000Z`).
+  - **Constructs the canonical signing payload** by joining three fixed fields with a pipe delimiter:
+    ```
+    canonicalPayload = studentId + "|" + projectId + "|" + issuedAt
+    ```
+    > **Rationale for payload fields**: `studentId` and `projectId` are stable UUIDs that uniquely identify the parties. `issuedAt` adds a time component preventing replay of the same payload across re-issues. Human-readable fields (name, title) are intentionally excluded because they are mutable — renaming a student or project would break existing signatures.
+  - **Computes HMAC-SHA256** using Node.js `crypto` module with the server-only secret:
+    ```typescript
+    import { createHmac } from "crypto";
+
+    function computeCertificateHMAC(
+      studentId: string,
+      projectId: string,
+      issuedAt: string // ISO-8601 UTC string, e.g. new Date().toISOString()
+    ): string {
+      const secret = process.env.CERT_SIGNING_SECRET;
+      if (!secret) throw new Error("CERT_SIGNING_SECRET env var is not set");
+      const payload = `${studentId}|${projectId}|${issuedAt}`;
+      return createHmac("sha256", secret).update(payload).digest("hex");
+    }
+    ```
+    - **Key**: `process.env.CERT_SIGNING_SECRET` — a minimum 32-byte random hex string stored exclusively in server-side environment variables (`.env.local` locally; Vercel Environment Variables in production). It is **never exposed to the client**.
+    - **Output**: A 64-character lowercase hex string (256-bit HMAC digest).
+  - Creates the `Certificate` record mapping: `id` (new UUID), `studentId`, `projectId`, `hashSignature` (the HMAC output), and `issuedAt`.
   - Updates `StudentProfile.status` to `CERTIFIED`.
 - **Success Response**: `{ success: true, certificateId: string }`
+
+##### Certificate Verification Function Signature
+The public `/api/verify/[certId]` route reconstructs and validates the signature server-side:
+```typescript
+async function verifyCertificateSignature(certId: string): Promise<boolean> {
+  // 1. Fetch the stored Certificate record by UUID
+  const cert = await prisma.certificate.findUnique({ where: { id: certId } });
+  if (!cert) return false;
+
+  // 2. Recompute HMAC over the same canonical payload using the same secret
+  const expected = computeCertificateHMAC(
+    cert.studentId,
+    cert.projectId,
+    cert.issuedAt.toISOString()
+  );
+
+  // 3. Constant-time comparison to prevent timing attacks
+  const { timingSafeEqual } = await import("crypto");
+  return timingSafeEqual(
+    Buffer.from(cert.hashSignature, "hex"),
+    Buffer.from(expected, "hex")
+  );
+}
+```
+> **Security note**: `timingSafeEqual` prevents timing side-channel attacks that could otherwise leak information by measuring how long a string comparison takes.
+
 
 ---
 
@@ -190,9 +233,10 @@ The application exposes a single read-only public endpoint to allow external ver
 
 ### `GET /api/verify/[certId]`
 - **Request Parameters**:
-  - `certId` (URL Path Parameter): The UUID of the certificate, or the HMAC hash signature.
+  - `certId` (URL Path Parameter): The UUID of the certificate record.
 - **Access Level**: Public (No authentication required)
 - **Response Format**: `JSON`
+- **Verification Mechanism**: Calls `verifyCertificateSignature(certId)` server-side. Fetches the stored `Certificate` by UUID, recomputes `HMAC-SHA256(studentId|projectId|issuedAt, CERT_SIGNING_SECRET)`, and performs a constant-time comparison against `Certificate.hashSignature`. Returns `valid: false` on any mismatch or missing record.
 - **Success Response (200 OK)**:
   ```json
   {
@@ -338,7 +382,7 @@ interface APIErrorPayload {
 |:---|:---|:---|:---:|
 | **API-REQ-01** | Student Submission | `submitDeliverables` action validates GitHub/Live URLs and checks progress | ✅ Covered |
 | **API-REQ-02** | Mentor Decision | `submitReview` writes feedback and toggles state to `APPROVED` or `REJECTED` | ✅ Covered |
-| **API-REQ-03** | Admin Certificate | `generateCertificate` triggers HMAC-SHA256 calculations and verification keys | ✅ Covered |
+| **API-REQ-03** | Admin Certificate | `generateCertificate` computes `HMAC-SHA256(studentId\|projectId\|issuedAt, CERT_SIGNING_SECRET)` and stores the 64-char hex digest as `hashSignature`; `verifyCertificateSignature` recomputes server-side using `timingSafeEqual` | ✅ Covered |
 | **API-REQ-04** | Security RBAC | Standard middleware verifies session parameters and roles on execution | ✅ Covered |
 | **API-REQ-05** | Public Lookups | `GET /api/verify/[certId]` route exposes authentic metadata to public requests | ✅ Covered |
 
@@ -346,6 +390,7 @@ interface APIErrorPayload {
 
 ## 7. Architecture Review Checklist
 - [x] Direct routing payloads mapped to validation checkers (Zod schemas defined)
-- [x] Safe verification routes handle invalid/non-existent certificates (standardized error structure mapped)
+- [x] Safe verification routes handle invalid/non-existent certificates (server-side HMAC recomputation + `timingSafeEqual` guard)
+- [x] Certificate signing uses HMAC-SHA256 with canonical payload `studentId|projectId|issuedAt` and server-only `CERT_SIGNING_SECRET` env var
 - [x] Responses enforce consistent JSON layout formatting (success and error types defined)
 - [x] No structural drift from Project Constitution (restricted to standard student, mentor, admin roles and actions)
