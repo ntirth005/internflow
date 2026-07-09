@@ -75,6 +75,19 @@ npm run dev
 Open **[http://localhost:3000](http://localhost:3000)** in your browser to view the portal.
 
 ---
+## How to Get Started
+
+### For Developers (Human)
+1.  Clone this repository.
+2.  Navigate to the `docs/` directory and review `docs/01_Project_Constitution.md`.
+3.  Consult `docs/CURRENT_PHASE.md` to see the active milestone.
+
+### For AI Assistants
+1.  Read **`docs/START_HERE.md`** first.
+2.  Confirm that you have read the startup checklist before taking action.
+3.  Draft/modify only the current active phase.
+
+---
 
 ## 📈 Development Workflow & Governance
 
