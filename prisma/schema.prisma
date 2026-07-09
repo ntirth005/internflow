@@ -1,0 +1,160 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  MENTOR
+  ADMIN
+}
+
+enum ProjectStatus {
+  UNASSIGNED
+  ASSIGNED
+  IN_PROGRESS
+  SUBMITTED
+  REJECTED
+  APPROVED
+  CERTIFIED
+}
+
+enum FeedbackDecision {
+  APPROVE
+  REJECT
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         Role          @default(STUDENT)
+  
+  // Relations
+  studentProfile  StudentProfile?
+  mentorProfile   MentorProfile?
+  feedbacksIssued Feedback[]     @relation("MentorFeedbacks")
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([email])
+}
+
+model StudentProfile {
+  id        String        @id @default(uuid())
+  userId    String        @unique
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  mentorId  String?
+  mentor    MentorProfile? @relation(fields: [mentorId], references: [id], onDelete: SetNull)
+  
+  projectId String?
+  project   Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  status    ProjectStatus @default(UNASSIGNED)
+  progress  Float         @default(0.0)
+
+  // Relations
+  taskCompletions StudentTaskCompletion[]
+  submission      Submission?
+  feedbacks       Feedback[]              @relation("StudentFeedbacks")
+  certificate     Certificate?
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([mentorId])
+  @@index([projectId])
+  @@index([status])
+}
+
+model MentorProfile {
+  id        String           @id @default(uuid())
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  assignedStudents StudentProfile[]
+  
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model Project {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  tasks       Json             // Structured array: [{ id: string, label: string, position: number }]
+  
+  // Relations
+  assignedStudents StudentProfile[]
+  certificates     Certificate[]
+  
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model StudentTaskCompletion {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  taskId    String         // Key referencing the task id in Project.tasks JSON
+  completed Boolean        @default(false)
+  
+  updatedAt DateTime       @updatedAt
+
+  @@unique([studentId, taskId])
+  @@index([studentId])
+}
+
+model Submission {
+  id         String         @id @default(uuid())
+  studentId  String         @unique
+  student    StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  githubUrl  String
+  liveUrl    String
+  
+  submittedAt DateTime      @default(now())
+
+  @@index([studentId])
+}
+
+model Feedback {
+  id        String           @id @default(uuid())
+  studentId String
+  student   StudentProfile   @relation(name: "StudentFeedbacks", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  mentorId  String
+  mentor    User             @relation(name: "MentorFeedbacks", fields: [mentorId], references: [id], onDelete: Cascade)
+  
+  comments  String
+  decision  FeedbackDecision
+  
+  createdAt DateTime         @default(now())
+
+  @@index([studentId])
+  @@index([mentorId])
+}
+
+model Certificate {
+  id            String         @id @default(uuid()) // Unique verification ID
+  studentId     String         @unique
+  student       StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  projectId     String
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  
+  hashSignature String         @unique // Verifiable signature (SHA-256 string)
+  issuedAt      DateTime       @default(now())
+  verified      Boolean        @default(true)
+
+  @@index([hashSignature])
+}
