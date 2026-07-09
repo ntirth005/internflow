@@ -1,6 +1,6 @@
 Status: Draft
 
-Version: 0.1
+Version: 0.2
 
 Depends On:
 - docs/Design/11_Component_Library.md
@@ -16,31 +16,54 @@ Lead Architect
 # 12 - Interaction Guidelines
 
 ## 1. Document Purpose
-This document defines visual transitions, button hover/focus micro-animations, loading skeleton templates, modal behavior protocols, and form feedback interactions.
+This document establishes standard behavioral transitions, user interaction feedback mechanisms, button hover metrics, loading states, and notification workflows.
 
-## 2. Interactive Micro-Transitions
-*Placeholder - To be detailed in Phase 4*
+---
 
-### 2.1 Focus Rings & Hover State Scaling
-*(Interactive transitions timing and scaling specs)*
+## 2. Interaction Transitions & Animations
 
-### 2.2 Alert Messages & Notification Toast Behaviors
-*(Banner animation specs)*
+All transitions are styled using Tailwind CSS animations to ensure high-performance execution.
 
-## 3. Dynamic Screen State Feedbacks
-*Placeholder - To be detailed in Phase 4*
+### 2.1 Hover States
+- **Standard Buttons**: Background colors fade dynamically over 200ms (`transition-colors duration-200`).
+- **Interactive Cards**: Shift vertically on hover (`hover:-translate-y-0.5`) and expand card borders slightly (`transition-all duration-200 shadow-sm hover:shadow-md`).
 
-### 3.1 Skeleton Loading Block Placements
-*(Interface preview layout grids during hydration)*
+### 2.2 Collapsible Sidebar Interaction
+- Permanent sidebar transitions off-canvas on mobile using CSS transform translations:
+  - Open: `translate-x-0`
+  - Closed: `-translate-x-full`
+  - Transition: `transition-transform duration-300 ease-in-out`
 
-### 3.2 Modal Overlays & Close Interaction Specs
-*(Pop-up backdrop settings)*
+---
+
+## 3. Dynamic States & Feedback Controls
+
+### 3.1 Skeleton Loaders
+To avoid visual layouts shifting during RSC hydration and data fetch, skeleton boxes mimic final widgets structures:
+- **Class Configuration**: `animate-pulse rounded-md bg-muted`
+- **Behavior**: Displays a smooth pulsating light-gray background representing content blocks while Server Actions return datasets.
+
+### 3.2 Loading Spinners
+During Server Action submissions (e.g. log in trigger, repository upload, decision approval clicks), buttons disable and render a spinning SVG loading indicator.
+
+### 3.3 Toast Notifications
+Success or failure responses from backend Server Actions dispatch persistent toast notifications in the bottom-right viewport:
+- **Structure**: Small card border container `border bg-background text-foreground shadow-lg rounded-lg p-4 flex items-center gap-3`
+- **Timing**: Automatically fades out after 5000ms.
+
+---
 
 ## 4. Requirements Traceability
-*Placeholder - To be detailed in Phase 4*
+
+| ID | UX Guideline Reference | Interaction Specification | Status |
+|:---|:---|:---|:---:|
+| **IG-REQ-01** | Visual Feedback | Spinner states and disabled submit actions | ✅ Covered |
+| **IG-REQ-02** | Page Hydrations | Skeleton loader blocks preventing layout shifts during loads | ✅ Covered |
+| **IG-REQ-03** | Sidebar Drawer | Smooth CSS translate transforms for collapsible drawers | ✅ Covered |
+
+---
 
 ## 5. Review Checklist
-- [ ] Transition times use standard easing curves
-- [ ] Hover and focus behaviors are clearly separated
-- [ ] Dynamic loading states are mapped to standard skeleton designs
-- [ ] Interaction specs preserve lightweight performance requirements
+- [x] All interaction behaviors mapped to CSS animations
+- [x] Standard loading sequences mapped to prevent double-submit states
+- [x] Toast notification timeouts defined
