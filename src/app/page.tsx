@@ -83,7 +83,7 @@ export default function Home() {
               </div>
               <div>
                 <h4 className="font-semibold text-base">Mentor Feedback Cycles</h4>
-                <p className="text-sm text-muted-foreground mt-0.5">Submissions queue instantly into your assigned mentor's workspace for quick approval loops.</p>
+                <p className="text-sm text-muted-foreground mt-0.5">Submissions queue instantly into your assigned mentor&apos;s workspace for quick approval loops.</p>
               </div>
             </div>
 
