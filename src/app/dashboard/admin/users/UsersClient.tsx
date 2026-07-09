@@ -15,6 +15,7 @@ import {
   assignProjectAction,
   assignMentorAction,
 } from "@/app/actions/admin";
+import { issueCertificateAction } from "@/app/actions/certificate";
 
 interface UserItem {
   id: string;
@@ -168,6 +169,21 @@ export const UsersClient: React.FC<UsersClientProps> = ({ users, mentors, projec
       setGlobalSuccess("Mentor assigned successfully!");
       setActiveForm(null);
       resetForm();
+    } else {
+      setGlobalError(res.error.message);
+    }
+    setIsLoading(false);
+  };
+
+  const handleIssueCertificate = async (studentProfileId: string) => {
+    setIsLoading(true);
+    setGlobalError("");
+    setGlobalSuccess("");
+
+    const res = await issueCertificateAction({ studentId: studentProfileId });
+
+    if (res.success) {
+      setGlobalSuccess("Certificate generated and issued successfully!");
     } else {
       setGlobalError(res.error.message);
     }
@@ -440,6 +456,16 @@ export const UsersClient: React.FC<UsersClientProps> = ({ users, mentors, projec
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1.5">
+                    {user.role === "STUDENT" && user.studentProfile?.status === "APPROVED" && (
+                      <Button
+                        onClick={() => handleIssueCertificate(user.studentProfile!.id)}
+                        className="h-8 px-2.5 text-xs bg-success hover:bg-success-hover text-success-foreground cursor-pointer animate-pulse"
+                        disabled={isLoading}
+                        title="Issue Graduation Certificate"
+                      >
+                        Issue Cert
+                      </Button>
+                    )}
                     {user.role === "STUDENT" && (
                       <Button
                         onClick={() => openAssign(user)}
