@@ -178,7 +178,7 @@ model Certificate {
   projectId     String
   project       Project        @relation(fields: [projectId], references: [id], onDelete: Restrict)
   
-  hashSignature String         @unique // HMAC-SHA256 hex digest (64 chars). Canonical payload: `studentId|projectId|issuedAt`. Key: CERT_SIGNING_SECRET env var. Verified server-side by recomputing and comparing with timingSafeEqual.
+  hashSignature String         @unique // HMAC-SHA256 hex digest (64 chars). Canonical payload: `studentId|projectId|issuedAt`. Key: CERTIFICATE_SECRET env var. Verified server-side by recomputing and comparing with timingSafeEqual.
   issuedAt      DateTime       @default(now())
   verified      Boolean        @default(true)
 
