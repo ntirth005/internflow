@@ -1,15 +1,74 @@
 # SkillBridge Internship Management Portal (IMP)
 
-Welcome to the **SkillBridge Internship Management Portal (IMP)**. This platform coordinates project distribution, student progress tracking, submission reviews, and cryptographic certificate generation.
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma ORM](https://img.shields.io/badge/Prisma-6.0-teal?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+A premium, production-grade enterprise platform designed to coordinate internship cohorts, track project milestone task completions, host auditor review workspaces, and issue cryptographically secure, publicly verifiable credentials.
 
 ---
 
-## 🚀 Technical Stack
+## 🎯 Architectural Overview & Highlights
 
-- **Frontend**: Next.js (App Router), React, TypeScript, Tailwind CSS
-- **Database**: PostgreSQL
-- **ORM**: Prisma ORM
-- **Hosting**: Vercel
+This portal is built as a monolithic Next.js application, utilizing Serverless Edge functions, relational database transaction pools, and stateless JWT-based Role-Based Access Controls (RBAC).
+
+```
+              ┌──────────────────────────────────────────────┐
+              │              Client View (Web)               │
+              └──────────────────────┬───────────────────────┘
+                                     │ (Client Server Actions / GET Requests)
+                                     ▼
+                      ┌──────────────────────────────┐
+                      │    Edge Routing Middleware   │ (Stateless JWT Verification)
+                      └──────────────┬───────────────┘
+                                     │
+                  ┌──────────────────┴──────────────────┐
+                  ▼                                     ▼
+      ┌──────────────────────┐              ┌──────────────────────┐
+      │   Serverless API     │              │    Public Verify     │ (Cryptographic Hash)
+      │  / Action Handlers   │              │   Landing Page       │ (Timing-Safe Check)
+      └──────────┬───────────┘              └──────────┬───────────┘
+                 │                                     │
+                 └───────────────────┬─────────────────┘
+                                     │ (Connection Pooling PgBouncer)
+                                     ▼
+                      ┌──────────────────────────────┐
+                      │    Relational PostgreSQL     │
+                      └──────────────────────────────┘
+```
+
+---
+
+## 🛠️ Key Engineering Achievements (For Lead Developers)
+
+### 1. Timing-Safe Cryptographic Signature Verification
+To safeguard public verification routes against side-channel timing attacks, certificates are protected by custom HMAC signatures:
+*   **Signature Generation**: Computes a deterministic HMAC-SHA256 digest on the payload `studentId|projectId|issuedAt` using a server-side private `CERTIFICATE_SECRET`.
+*   **Timing-Safe Evaluation**: Public query lookups compare the URL signature against the expected signature using Node's `crypto.timingSafeEqual`, preventing information leaks caused by character-by-character string comparison speed differences.
+
+### 2. Next.js Server Actions & React 19 Optimistic State Updates
+- **Instant Responsiveness**: Student project checklists leverage React 19 optimistic rendering states to toggle UI checkboxes instantly before database writes complete.
+- **Atomic Database Operations**: Actions execute transactional updates (`prisma.$transaction`) to toggle task completion counters, recompute progress metrics, and automatically transition student profile statuses (`ASSIGNED` -> `IN_PROGRESS`).
+- **Data Invalidation**: Uses Next's `revalidatePath` to trigger instant cache updates across active pages.
+
+### 3. Edge Middleware Role-Based Access Control (RBAC)
+- Stateless session management is achieved using JSON Web Tokens (JWT) signed with modern cryptographic algorithms (`jose` library) and stored in `httpOnly` secure cookies.
+- Edge Middleware intercepts matching dashboard prefixes (`/dashboard/:path*`), verifies token payloads, and executes RBAC rules on incoming requests before page assets render.
+
+### 4. Database Connection Pooling Safety
+- To prevent Serverless function scaling from exhausting database connections, transaction strings utilize PgBouncer pool limits: `?connection_limit=10&pgbouncer=true`.
+- Database schema changes and seed scripts execute using a direct `DIRECT_URL` string to bypass connection pool caches during schema sync.
+
+---
+
+## 💻 Core Features (For Recruiters & Interviewers)
+
+- **Comprehensive Student Workspace**: Visual project progress rings, interactive task checklists, deliverable submit forms (validating repository URLs), and historical review timelines.
+- **Mentor Audit Workspace**: A dedicated, searchable student review queue, evaluation workspaces, and formal sign-off components (`APPROVE` or `REJECT` inputs).
+- **Admin Management Panel**: Full user directory lists, project template builders, cohort allocation selectors (assigning project tasks and mentors to students), and credential issuance switches.
+- **Public Verification Directory**: Centered lookup route where employers or recruiters can paste signature hashes to verify the certificate's authenticity.
 
 ---
 
@@ -17,101 +76,64 @@ Welcome to the **SkillBridge Internship Management Portal (IMP)**. This platform
 
 ```
 .
-├── docs/                      # Gated project documentation hierarchy
-│   ├── 00_Project_Requirements.pdf
-│   ├── 01_Project_Constitution.md
-│   ├── CURRENT_PHASE.md       # Live project phase and document status tracker
-│   └── ...
-├── prisma/                    # Relational database models and schemas
-│   └── schema.prisma
+├── docs/                      # Gated architectural blueprints & standards
+│   ├── Architecture/          # System designs (Product, UX, Database, API)
+│   ├── Design/                # Component libraries & interaction guides
+│   ├── Planning/              # Roadmaps, testing & deployment strategies
+│   └── CURRENT_PHASE.md       # Live project development status tracker
+├── prisma/                    # Database models, migrations, and seeds
+│   ├── schema.prisma
+│   └── seed.ts                # Populate demo users & certified graduates
 ├── src/
-│   ├── app/                   # App Router views, landing pages, and endpoints
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── ...
-│   ├── components/            # Reusable UI widgets
-│   ├── lib/                   # Shared client helpers (e.g., Prisma singleton)
-│   └── ...
-├── .env                       # Environment profiles (Database strings, JWT secrets)
+│   ├── app/                   # App Router views & Server Actions
+│   │   ├── actions/           # Core mutations (Student, Mentor, Certificate)
+│   │   ├── dashboard/         # Multi-role sub-directories
+│   │   ├── verify/            # Public certificate search & validation routes
+│   │   └── page.tsx
+│   ├── components/            # Shared UI components (Card, Alert, Button)
+│   └── lib/                   # Singletons & cryptographic utilities
+├── vercel.json                # Production deployment settings
 └── package.json
 ```
 
 ---
 
-## 🛠️ How to Run Locally
+## 🚀 How to Run & Test the Demo Locally
 
-### 1. Prerequisites
-Ensure you have **Node.js** and **PostgreSQL** installed locally.
-
-### 2. Set Up Environment Variables
-Create a `.env` file in the project root folder (or copy from the provided template):
+### 1. Configure the Environment Profile
+Create a `.env` file in the project root:
 ```bash
-# PostgreSQL Connection Strings
+# Relational Database Connection (PgBouncer vs Direct)
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/skillbridge_imp?schema=public&connection_limit=10&pgbouncer=true"
 DIRECT_URL="postgresql://postgres:postgres@localhost:5432/skillbridge_imp?schema=public"
 
 # Cryptographic Signer Secrets
-JWT_SECRET="your_jwt_secret_token_signature_key"
-CERTIFICATE_SECRET="your_certificate_hmac_sha256_private_secret_key"
+JWT_SECRET="skillbridge_jwt_secret_token_signature_key_2026"
+CERTIFICATE_SECRET="skillbridge_certificate_hmac_sha256_private_secret_key"
 ```
 
-### 3. Install Dependencies
-Run the installation with the `--ignore-scripts` flag as required by repository safety guidelines:
+### 2. Install Dependencies & Build
 ```bash
 npm install --ignore-scripts
-```
-
-### 4. Generate Prisma Client
-Build the database interface bindings:
-```bash
 npx prisma generate
 ```
 
-### 5. Start Development Server
-Launch the compiler and hot-reloader:
+### 3. Seed Database & Generate Demo Hash
+Execute the seed runner to automatically populate initial users and generate a pre-graduated certified student record:
+```bash
+npx prisma db seed
+```
+This logs a pre-calculated demo verification link directly to your console, e.g.:
+`http://localhost:3000/verify/249298a59cd741a96921d270b57cd7444ef37991a6ee4d15032bfdfaac744288`
+
+### 4. Start Development Server
 ```bash
 npm run dev
 ```
-Open **[http://localhost:3000](http://localhost:3000)** in your browser to view the portal.
+Open **[http://localhost:3000](http://localhost:3000)** to test the login flows!
 
----
-## How to Get Started
-
-### For Developers (Human)
-1.  Clone this repository.
-2.  Navigate to the `docs/` directory and review `docs/01_Project_Constitution.md`.
-3.  Consult `docs/CURRENT_PHASE.md` to see the active milestone.
-
-### For AI Assistants
-1.  Read **`docs/START_HERE.md`** first.
-2.  Confirm that you have read the startup checklist before taking action.
-3.  Draft/modify only the current active phase.
-
----
-
-## 📈 Development Workflow & Governance
-
-This project implements a strict **documentation-first workflow**. All 21 documentation files (covering architecture, design systems, and testing rules) must be approved before shipping code features.
-
-- **Gating Log**: Refer to [CURRENT_PHASE.md](file:///home/ntirth005/Documents/IMP/docs/CURRENT_PHASE.md) for live phase tracking.
-- **Commit Format**: All commit messages must follow the Conventional Commits Specification:
-  - `feat(scope): <description>` (new features)
-  - `fix(scope): <description>` (bug fixes)
-  - `docs(scope): <description>` (documentation updates)
-  - `refactor(scope): <description>` (refactoring checks)
-
-For a deep-dive into the specifications, browse the files in the [docs](file:///home/ntirth005/Documents/IMP/docs/) folder.
-
----
-
-## 4. How to Get Started
-
-### For Developers (Human)
-1.  Clone this repository.
-2.  Navigate to the `docs/` directory and review `docs/01_Project_Constitution.md`.
-3.  Consult `docs/CURRENT_PHASE.md` to see the active milestone.
-
-### For AI Assistants
-1.  Read **`docs/START_HERE.md`** first.
-2.  Confirm that you have read the startup checklist before taking action.
-3.  Draft/modify only the current active phase.
+#### Demo Credentials (Password: `password123`)
+- **System Admin**: `admin@interflow.co.in`
+- **Mentor**: `mentor@interflow.co.in`
+- **Student**: `student@interflow.co.in`
+- **Pre-Certified Graduate**: `certified@interflow.co.in`
