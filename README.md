@@ -88,3 +88,17 @@ This project implements a strict **documentation-first workflow**. All 21 docume
   - `refactor(scope): <description>` (refactoring checks)
 
 For a deep-dive into the specifications, browse the files in the [docs](file:///home/ntirth005/Documents/IMP/docs/) folder.
+
+---
+
+## 4. How to Get Started
+
+### For Developers (Human)
+1.  Clone this repository.
+2.  Navigate to the `docs/` directory and review `docs/01_Project_Constitution.md`.
+3.  Consult `docs/CURRENT_PHASE.md` to see the active milestone.
+
+### For AI Assistants
+1.  Read **`docs/START_HERE.md`** first.
+2.  Confirm that you have read the startup checklist before taking action.
+3.  Draft/modify only the current active phase.
