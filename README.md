@@ -41,7 +41,8 @@ This portal is built as a monolithic Next.js application, utilizing Serverless E
 
 ---
 
-## 🛠️ Key Engineering Achievements (For Lead Developers)
+<details>
+<summary>🛠️ Key Engineering Achievements (For Lead Developers - Click to Expand)</summary>
 
 ### 1. Timing-Safe Cryptographic Signature Verification
 To safeguard public verification routes against side-channel timing attacks, certificates are protected by custom HMAC signatures:
@@ -60,6 +61,8 @@ To safeguard public verification routes against side-channel timing attacks, cer
 ### 4. Database Connection Pooling Safety
 - To prevent Serverless function scaling from exhausting database connections, transaction strings utilize PgBouncer pool limits: `?connection_limit=10&pgbouncer=true`.
 - Database schema changes and seed scripts execute using a direct `DIRECT_URL` string to bypass connection pool caches during schema sync.
+
+</details>
 
 ---
 
